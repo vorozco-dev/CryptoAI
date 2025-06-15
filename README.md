@@ -75,4 +75,4 @@ También puedes ver las otras páginas desde el menú lateral (por ejemplo, "2_a
 
 📧 Soporte
 ----------
-Contacto: [vorozco@google.com]
+Contacto: [vorozco@gmail.com]
