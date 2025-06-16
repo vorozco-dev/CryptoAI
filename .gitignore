@@ -1,0 +1,38 @@
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Caches
+*.cache/
+*.log
+
+# Database / Data files
+*.sqlite3
+*.db
+*.parquet
+*.csv
+*.xlsx
+*.zip
+*.pkl
+data/
+
+# Environment variables
+.env
+.env/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# PyCharm
+.idea/
+
+# VSCode
+.vscode/
+
+# Streamlit
+.streamlit/config.toml
