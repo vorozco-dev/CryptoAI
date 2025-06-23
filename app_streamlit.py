@@ -4,10 +4,12 @@ from processing import (
     insert_investment,
     get_all_investments,
     delete_investment,
-    get_investments_by_coin
+    get_investments_by_coin,
+    bulk_insert_investments
 )
 from plotter import plot_comparison_with_marker
 import pandas as pd
+
 
 st.set_page_config(page_title="CryptoAI ",layout="wide")
 st.title("📊 CryptoAI - Visualización & Registro de Inversiones")
@@ -173,6 +175,35 @@ else:
         file_name="historial_inversiones.csv",
         mime="text/csv"
     )
+
+#========
+# Subir CSV
+st.header("📥 Cargar inversiones desde CSV")
+uploaded_file = st.file_uploader("📤 Sube un archivo CSV con columnas: coin_id, date, investor, amount, note",
+                                 type="csv")
+
+if uploaded_file:
+    try:
+        df = pd.read_csv(uploaded_file)
+
+        # Validar columnas requeridas
+        expected_cols = {"coin_id", "date", "investor", "amount", "note"}
+        if not expected_cols.issubset(df.columns):
+            st.error(f"❌ El archivo debe tener las columnas: {', '.join(expected_cols)}")
+        else:
+            st.write("📄 Vista previa del archivo:")
+            st.dataframe(df.head())
+
+            if st.button("🚀 Cargar inversiones"):
+                result = bulk_insert_investments(df)
+                st.success(f"✅ Se insertaron {result['insertados']} registros.")
+                if result['errores'] > 0:
+                    st.warning(f"⚠️ Se omitieron {result['errores']} registros ya existentes (por clave duplicada).")
+
+    except Exception as e:
+        st.error(f"🚨 Error al procesar el archivo: {e}")
+else:
+    st.info("📄 Esperando un archivo CSV...")
 
 #======== Eliminar inversiones
 

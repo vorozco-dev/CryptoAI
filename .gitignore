@@ -27,6 +27,7 @@ data/
 
 # Windows
 Thumbs.db
+*.exe
 
 # PyCharm
 .idea/

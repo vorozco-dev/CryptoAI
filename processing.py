@@ -189,3 +189,37 @@ def process_price_data_from_db(coin_id: str) -> pd.DataFrame:
     df['date'] = pd.to_datetime(df['date'])
 
     return df
+
+
+def bulk_insert_investments(df: pd.DataFrame) -> dict:
+    """
+    Inserta múltiples registros en la tabla investments desde un DataFrame.
+
+    Retorna un diccionario con el número de registros insertados y errores.
+    """
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+
+    insertados = 0
+    errores = 0
+
+    for _, row in df.iterrows():
+        try:
+            cursor.execute("""
+                INSERT INTO investments (coin_id, date, investor, amount, note)
+                VALUES (?, ?, ?, ?, ?)
+            """, (
+                row['coin_id'],
+                row['date'],
+                row['investor'],
+                float(row['amount']),
+                row.get('note', '')
+            ))
+            insertados += 1
+        except sqlite3.IntegrityError:
+            errores += 1
+            continue
+
+    conn.commit()
+    conn.close()
+    return {"insertados": insertados, "errores": errores}
